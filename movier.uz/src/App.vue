@@ -10,7 +10,12 @@
       <SearchPanel @searchValue="updateMovie" />
       <AddFilter :updateFilterHandler="updateFilterHandler" />
     </div>
-    <div class="movie-list items">
+    <div class="items" v-if="!movies.length">
+      <div class="spinner-border text-warning" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div class="movie-list items" v-else="movies.length">
       <MovieList
         :movies="filterHandler(searchMovie(movies, this.term), filter)"
         @onLike="onLikeHandler"
@@ -41,29 +46,7 @@ export default {
   },
   data() {
     return {
-      movies: [
-        {
-          name: "Omar",
-          viewers: 996,
-          like: false,
-          favourite: true,
-          id: 1,
-        },
-        {
-          name: "Ertugrul",
-          viewers: 784,
-          like: true,
-          favourite: false,
-          id: 2,
-        },
-        {
-          name: "Empire of Osman",
-          viewers: 885,
-          like: true,
-          favourite: false,
-          id: 3,
-        },
-      ],
+      movies: [],
       term: "",
       errorMessage: { name: "ERROR !" },
       filter: "all",
@@ -119,6 +102,30 @@ export default {
     updateFilterHandler(filter) {
       this.filter = filter;
     },
+    async fetchMovie() {
+      const response = await fetch("https://jsonplaceholder.typicode.com/todos?_limit=10")
+        .then((data) => {
+          return data.json();
+        })
+        .then((dataJson) => {
+          setTimeout(() => {
+            const newArr = dataJson.map((item) => ({
+              id: item.id,
+              name: item.title,
+              like: item.completed,
+              viewers: item.id * 105,
+              favourite: false,
+            }));
+            this.movies = newArr;
+          }, 1500);
+        })
+        .catch(() => {
+          alert("Serverda xatolik mavjud !!!");
+        });
+    },
+  },
+  mounted() {
+    this.fetchMovie();
   },
 };
 </script>
@@ -139,7 +146,7 @@ body {
   background-color: rgb(241, 235, 235);
   padding: 1rem 2rem;
   margin: 5rem 15rem;
-  max-height: 16rem;
+  height: 100%;
   box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.15);
 }
 </style>

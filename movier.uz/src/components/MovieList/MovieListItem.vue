@@ -49,6 +49,7 @@ export default {
   border-radius: 0;
   border-bottom: 1px solid rgb(152, 148, 148);
   background-color: transparent;
+  text-align: start;
 }
 .list-group-item:last-child {
   border: 0;
@@ -64,9 +65,17 @@ export default {
   border: 0;
   outline: none;
 }
+.icons {
+  display: flex;
+}
 .icons button {
+  align-self: center;
   border: 0;
   background-color: transparent;
+}
+.icons button i {
+  display: flex;
+  justify-content: space-between;
 }
 .list-group-item.favourite .title,
 .list-group-item.favourite input,
@@ -88,5 +97,8 @@ export default {
 .fa-trash {
   color: red;
   margin-right: 6px;
+}
+.title {
+  max-width: 25rem;
 }
 </style>
